@@ -14,8 +14,10 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.DAO.ComunidadeDAO;
 
 import model.DAO.PessoaDAO;
+import model.bean.Comunidade;
 
 import model.bean.Pessoa;
 
@@ -24,12 +26,15 @@ import model.bean.Pessoa;
  * @author biank
  */
 public class CadastroPessoa extends javax.swing.JFrame {
-
+    String vinculo;
+  
     /**
      * Creates new form cadastroAluno
      */
-    public CadastroPessoa() {
+    public CadastroPessoa(String vinculo) {
         initComponents();
+        this.vinculo = vinculo;
+       
     }
 
     /**
@@ -56,8 +61,6 @@ public class CadastroPessoa extends javax.swing.JFrame {
         cpf = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
         rg = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        vinculo = new javax.swing.JComboBox<>();
         email = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -96,12 +99,6 @@ public class CadastroPessoa extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel13.setText("RG:");
 
-        jLabel9.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel9.setText("Vínculo: ");
-
-        vinculo.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        vinculo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Aluno (a)", "Funcionário (a)", "Comunidade" }));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -111,8 +108,7 @@ public class CadastroPessoa extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -121,7 +117,6 @@ public class CadastroPessoa extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(vinculo, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,7 +135,7 @@ public class CadastroPessoa extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -162,23 +157,19 @@ public class CadastroPessoa extends javax.swing.JFrame {
                     .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13)
                     .addComponent(rg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(vinculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
-        jLabel11.setText("CADASTRAR ALUNO");
+        jLabel11.setText("CADASTRO");
 
         jLabel17.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 51, 51));
-        jLabel17.setText("-----------------------------------------");
+        jLabel17.setText("-------------------------------------------------");
 
         jLabel18.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 51, 51));
-        jLabel18.setText("-----------------------------------------");
+        jLabel18.setText("------------------------------------------------");
 
         jLabel19.setBackground(java.awt.Color.lightGray);
         jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/prox.png"))); // NOI18N
@@ -253,12 +244,28 @@ public class CadastroPessoa extends javax.swing.JFrame {
         p.setEmail(email.getText());
         p.setNome(nome.getText());
         p.setTelefone(Integer.parseInt(tel.getText()));
-        vincular();
+        
         dao.create(p);
-                
+        
+        
+        
+        vincular(p,vinculo);
        
       
     }//GEN-LAST:event_jLabel19MouseClicked
+    public void CadsatrarComunidade (Pessoa p){
+        
+            Comunidade com = new Comunidade();
+            ComunidadeDAO cdao = new ComunidadeDAO();
+                    com.setEndereco(end.getText());
+                    
+                    com.setCpf(p.getCpf());
+                    
+                    
+                    cdao.create(com);
+        
+        
+    }
     public Date converteData (String data) throws ParseException{
         SimpleDateFormat formateData = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date date;
@@ -266,63 +273,89 @@ public class CadastroPessoa extends javax.swing.JFrame {
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
         return  sqlDate;
     }
-    public  void vincular (){
-        if(vinculo.getSelectedItem().equals("Aluno (a)")){
-            CadastroAluno2 c = new CadastroAluno2 ();
-            c.setVisible(true);
-            this.dispose();
-        }
-        else if(vinculo.getSelectedItem().equals("Funcionário (a)")){
-            CadastroFunc c = new CadastroFunc();
-            c.setVisible(true);
-            this.dispose();
-        }
-        else if(vinculo.getSelectedItem().equals("Comunidade")){
-            CadastrarComunidade c = new CadastrarComunidade();
-            c.setVisible(true);
-            this.dispose();
-        }
-        else {
+    public  void vincular (Pessoa p, String vinculo){
+        if(null == vinculo){
             JOptionPane.showMessageDialog(null, "Selecione o vínculo!");
+        }
+        else switch (vinculo) {
+            case "Aluno (a)":
+                {
+                    CadastroAluno2 c = new CadastroAluno2 (p);
+                    c.setVisible(true);
+                    this.dispose();
+                    break;
+                }
+            case "Usuario":
+                {
+                    int tipo = 1;
+                    CadastroFunc c = new CadastroFunc(p, tipo);
+                    c.setVisible(true);
+                    this.dispose();
+                    break;
+                }
+            case "Funcionário (a)":
+                {
+                    int tipo =2;
+                    CadastroFunc c = new CadastroFunc(p,tipo);
+                    c.setVisible(true);
+                    this.dispose();
+                    break;
+                }
+            case "Comunidade":
+                {
+                    System.out.println(p.getCpf());
+                    CadsatrarComunidade(p);
+                    nome.setText("");
+                    end.setText("");
+                    tel.setText("");
+                    email.setText("");
+                    rg.setText("");
+                    cpf.setText("");
+                    data.setText("");
+                    
+                    //this.dispose();
+                    break;
+                }
+         
         }
     }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroPessoa().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new CadastroPessoa().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
@@ -341,11 +374,9 @@ public class CadastroPessoa extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nome;
     private javax.swing.JTextField rg;
     private javax.swing.JFormattedTextField tel;
-    private javax.swing.JComboBox<String> vinculo;
     // End of variables declaration//GEN-END:variables
 }

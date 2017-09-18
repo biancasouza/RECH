@@ -4,14 +4,19 @@
  * and open the template in the editor.
  */
 package views;
+
 import java.awt.Toolkit;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.DAO.FuncDAO;
+import model.DAO.Func_comumDAO;
 import model.DAO.Func_userDAO;
+import model.bean.Func_comum;
+import model.bean.Func_user;
 import model.bean.Funcionario;
+import model.bean.Pessoa;
 
 /**
  *
@@ -19,11 +24,17 @@ import model.bean.Funcionario;
  */
 public class CadastroFunc extends javax.swing.JFrame {
 
-    /**
+    Pessoa p;
+    int tipo;
+
+    /*
      * Creates new form CadastroFunc
      */
-    public CadastroFunc() {
+    public CadastroFunc(Pessoa p, int tipo) {
         initComponents();
+        this.p = p;
+        this.tipo = tipo;
+
     }
 
     /**
@@ -42,12 +53,11 @@ public class CadastroFunc extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         mat = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        setor = new javax.swing.JComboBox<>();
+        mat1 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("RECH - Cadastrar Funcionário");
@@ -69,8 +79,6 @@ public class CadastroFunc extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel14.setText("Setor: ");
 
-        setor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "CAE", "Recepção", "Outro" }));
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -85,28 +93,22 @@ public class CadastroFunc extends javax.swing.JFrame {
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(mat)))
-                .addGap(69, 69, 69)
+                .addGap(102, 102, 102)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setor, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addComponent(mat1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(cargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
-                            .addComponent(setor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(1, 1, 1)))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(cargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
+                    .addComponent(mat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(mat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -132,18 +134,14 @@ public class CadastroFunc extends javax.swing.JFrame {
             }
         });
 
-        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/prox.png"))); // NOI18N
-        jLabel21.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jLabel21.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel21MouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
         Rech.setLayout(RechLayout);
         RechLayout.setHorizontalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel20)
+                .addGap(68, 68, 68))
             .addGroup(RechLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,16 +152,7 @@ public class CadastroFunc extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel19)
                         .addContainerGap(20, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel21)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel20)
-                .addGap(21, 21, 21))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,10 +165,8 @@ public class CadastroFunc extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel21))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addComponent(jLabel20)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -199,74 +186,68 @@ public class CadastroFunc extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseClicked
-       if(setor.getSelectedItem().equals("Outro")){
+
         Funcionario f = new Funcionario();
         FuncDAO dao = new FuncDAO();
 
-        f.setMatricula(Integer.parseInt(mat.getText()));
+        f.setMatricula(mat.getText());
         f.setCargo(cargo.getText());
-        f.setSetor((String) setor.getSelectedItem());
+        f.setSetor(cargo.getText());
+        f.setCpf(p.getCpf());
         dao.create(f);
-        JOptionPane.showMessageDialog(null,"Funcionário (a) cadastrado (a) com sucesso!");
-       }
-       else if(setor.getSelectedItem().equals("CAE") || setor.getSelectedItem().equals("Recepção")){
-        JOptionPane.showMessageDialog(null,"Clique em prosseguir para concluir seu cadastro!");
-      } 
-    }//GEN-LAST:event_jLabel20MouseClicked
-   
-    
-    private void jLabel21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel21MouseClicked
-        if(setor.getSelectedItem().equals("CAE") || setor.getSelectedItem().equals("Recepção")){
-        Funcionario f = new Funcionario();
-        FuncDAO dao = new FuncDAO();
 
-        f.setMatricula(Integer.parseInt(mat.getText()));
-        f.setCargo(cargo.getText());
-        f.setSetor((String) setor.getSelectedItem());
-        dao.create(f);
-        CadastroUser c = new CadastroUser();
-        c.setVisible(true);
-        this.dispose();
+        if (tipo == 1) {
+          CadastroUser fu= new CadastroUser(f);
+          fu.setVisible(true);
+            
+        } 
+        else if (tipo == 2) {
+            Func_comum cf = new Func_comum();
+            Func_comumDAO cdao = new Func_comumDAO();
+            if (dao.create(f)) {
+                cf.setCod_func(f.getCod_func());
+                cf.setTipo("");
+
+                cdao.create(cf);
+            }
+
         }
-        else if(setor.getSelectedItem().equals("Outro")){
-        JOptionPane.showMessageDialog(null,"Clique em salvar para concluir seu cadastro!");
-      } 
-    }//GEN-LAST:event_jLabel21MouseClicked
-    
+    }//GEN-LAST:event_jLabel20MouseClicked
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroFunc().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(CadastroFunc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new CadastroFunc().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
@@ -277,10 +258,9 @@ public class CadastroFunc extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField mat;
-    private javax.swing.JComboBox<String> setor;
+    private javax.swing.JTextField mat1;
     // End of variables declaration//GEN-END:variables
 }

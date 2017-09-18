@@ -27,7 +27,8 @@ public class PessoaDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try{
-            stmt = c.prepareStatement("INSERT INTO pessoa (cpf,telefone,nome, data_nasc,rg,email) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          //  stmt = c.prepareStatement("INSERT INTO pessoa (cpf,telefone,nome, data_nasc,rg,email) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            stmt = c.prepareStatement("INSERT INTO pessoa (cpf,telefone,nome, data_nasc,rg,email) VALUES (?,?,?,?,?,?)");
             stmt.setInt(1, p.getCpf());
             stmt.setInt(2, p.getTelefone());
             stmt.setString(3, p.getNome());
@@ -36,11 +37,11 @@ public class PessoaDAO {
             stmt.setString(6, p.getEmail());
             stmt.executeUpdate();
             
-            ResultSet rs = stmt.getGeneratedKeys();
-            rs.next();
-            int idGerado = rs.getInt(1);
-            
-            
+//            ResultSet rs = stmt.getGeneratedKeys();
+//            rs.next();
+//            int idGerado = rs.getInt(1);
+//            p.setCpf(idGerado);
+//            
         }
         catch(SQLException ex){
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE,null,ex);

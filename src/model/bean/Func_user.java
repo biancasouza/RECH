@@ -16,12 +16,13 @@ public class Func_user extends Funcionario{
     String login;
     String senha;
 
-    public Func_user(int cod_user_func, String login, String senha, int cod_func, int matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
+    public Func_user(int cod_user_func, String login, String senha, int cod_func, String matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
         super(cod_func, matricula, cargo, setor, cpf, telefone, nome, data_nasc, rg, email);
         this.cod_user_func = cod_user_func;
         this.login = login;
         this.senha = senha;
     }
+     public Func_user(){}
    
     public int getCod_user_func() {
         return cod_user_func;

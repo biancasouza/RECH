@@ -13,12 +13,12 @@ import java.util.Date;
  */
 public class Funcionario extends Pessoa{
     int cod_func;
-    int matricula;
+    String matricula;
     String cargo;
     String setor;
    
 
-    public Funcionario(int cod_func, int matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
+    public Funcionario(int cod_func, String matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
         super(cpf, telefone, nome, data_nasc, rg, email);
         this.cod_func = cod_func;
         this.matricula = matricula;
@@ -37,11 +37,11 @@ public class Funcionario extends Pessoa{
         this.cod_func = cod_func;
     }
 
-    public int getMatricula() {
+    public String getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(int matricula) {
+    public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 

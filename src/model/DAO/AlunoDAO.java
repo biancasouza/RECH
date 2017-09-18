@@ -26,12 +26,12 @@ public class AlunoDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try{
-            stmt = c.prepareStatement("INSERT INTO aluno (matricula,curso,semestre, turno) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            stmt = c.prepareStatement("INSERT INTO aluno (matricula,curso,semestre, turno,cpf) VALUES (?,?,?,?,?)");
             stmt.setInt(1, a.getMatricula());
             stmt.setString(2, a.getCurso());
             stmt.setInt(3, a.getSemestre());
             stmt.setString(4, a.getTurno()); 
-    
+            stmt.setInt(5, a.getCpf());
             stmt.executeUpdate();
             
            

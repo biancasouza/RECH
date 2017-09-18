@@ -5,7 +5,22 @@
  */
 package views;
 
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.DAO.ReservaDAO;
+import model.bean.Ambiente;
+import model.bean.Reserva;
 
 
 /**
@@ -17,8 +32,9 @@ public class Reservar extends javax.swing.JFrame {
     /**
      * Creates new form Reservar
      */
-    public Reservar() {
+    public Reservar() throws SQLException {
         initComponents();
+        listarambiente();
        
     }
 
@@ -34,18 +50,15 @@ public class Reservar extends javax.swing.JFrame {
         Rech = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        ambiente = new javax.swing.JComboBox<>();
+        data = new javax.swing.JTextField();
+        hora = new javax.swing.JTextField();
+        cpf = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -63,49 +76,22 @@ public class Reservar extends javax.swing.JFrame {
     jLabel11.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
     jLabel11.setText("RESERVAR");
 
-    jPanel3.setBackground(new java.awt.Color(97, 180, 83));
-    jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 14))); // NOI18N
-
-    jLabel14.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jLabel14.setText("Ambiente: ");
-
-    javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-    jPanel3.setLayout(jPanel3Layout);
-    jPanel3Layout.setHorizontalGroup(
-        jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(jPanel3Layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jLabel14)
-            .addGap(80, 80, 80)
-            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-    jPanel3Layout.setVerticalGroup(
-        jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(jPanel3Layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel14))
-            .addContainerGap())
-    );
-
     jPanel4.setBackground(new java.awt.Color(97, 180, 83));
     jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 14))); // NOI18N
 
     jLabel16.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jLabel16.setText("Data:");
 
-    jLabel17.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jLabel17.setText("Reservado para: ");
-
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Aluno","Comunidade","Funcionário"}));
-
-    jLabel18.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jLabel18.setText("Matrícula (Para alunos): ");
-
     jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jLabel19.setText("CPF (Para os demais):");
+
+    jLabel20.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+    jLabel20.setText("Hora: ");
+
+    jLabel14.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+    jLabel14.setText("Ambiente: ");
+
+    ambiente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione"}));
 
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
     jPanel4.setLayout(jPanel4Layout);
@@ -114,41 +100,38 @@ public class Reservar extends javax.swing.JFrame {
         .addGroup(jPanel4Layout.createSequentialGroup()
             .addContainerGap()
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel17)
-                        .addComponent(jLabel18)
-                        .addComponent(jLabel16))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addComponent(jLabel19)
-                    .addGap(18, 18, 18)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel19)
+                .addComponent(jLabel16)
+                .addComponent(jLabel20)
+                .addComponent(jLabel14))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(hora, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(data, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(cpf)
+                .addComponent(ambiente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE))
     );
     jPanel4Layout.setVerticalGroup(
         jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel4Layout.createSequentialGroup()
-            .addContainerGap(13, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jLabel17)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel18))
-            .addGap(7, 7, 7)
+            .addGap(23, 23, 23)
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel19)
-                .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(9, 9, 9)
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel16)
-                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jLabel20)
+                .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(16, 16, 16)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(ambiente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel14))
+            .addGap(0, 69, Short.MAX_VALUE))
     );
 
     jLabel12.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
@@ -162,6 +145,11 @@ public class Reservar extends javax.swing.JFrame {
     jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sair_318-10026.png"))); // NOI18N
 
     jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sair.png"))); // NOI18N
+    jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            jLabel10MouseClicked(evt);
+        }
+    });
 
     javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
     Rech.setLayout(RechLayout);
@@ -171,7 +159,6 @@ public class Reservar extends javax.swing.JFrame {
             .addContainerGap()
             .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
                     .addComponent(jLabel12)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
@@ -199,11 +186,9 @@ public class Reservar extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addComponent(jLabel12)
                 .addComponent(jLabel13))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(22, 22, 22)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(18, 18, 18)
+            .addGap(23, 23, 23)
             .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
                 .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -227,7 +212,102 @@ public class Reservar extends javax.swing.JFrame {
 
     pack();
     }// </editor-fold>//GEN-END:initComponents
+     public void listarambiente() throws SQLException{
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        stmt = c.prepareStatement("SELECT setor FROM ambiente WHERE status = 0");
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){  
+            ambiente.addItem(rs.getString(1));
+            
+        } 
+        ambiente.updateUI();
+    }
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        Reserva r = new Reserva();
+        ReservaDAO dao = new ReservaDAO();
+        
+        try {
+            r.setData_evento(converteData(data.getText()));
+        } catch (ParseException ex) {
+            Logger.getLogger(Reservar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            r.setHora(converteHora(hora.getText()));
+        } catch (ParseException ex) {
+            Logger.getLogger(Reservar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Connection con = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        try {
+           
+            stmt = con.prepareStatement("SELECT * FROM pessoa WHERE pessoa.cpf = ? ");
+         
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("CPF não encontrado!");
+        }
+        try {
+            stmt.setString(1, cpf.getText());
+            rs = stmt.executeQuery();
+        
+            if (rs.next()) {
+                int cpf_num = rs.getInt("cpf");
+                r.setCpf(cpf_num);
+            }
+          
+         } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
 
+            }
+         try {
+           
+            stmt2 = con.prepareStatement("SELECT * FROM ambiente WHERE ambiente.setor = ? ");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        try {
+        
+            stmt2.setString(1, (String) ambiente.getSelectedItem());
+            rs2= stmt2.executeQuery();
+          
+            if (rs2.next()) {
+                int sala_num = rs2.getInt("numero");
+                r.setNumero(sala_num);
+            }
+         } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex);
+            }
+           
+        dao.create(r);
+        data.setText("");
+        hora.setText("");
+        cpf.setText("");
+        ambiente.setSelectedItem("Selecione");
+        
+        
+                
+    }//GEN-LAST:event_jLabel10MouseClicked
+    public Date converteData (String data) throws ParseException{
+        SimpleDateFormat formateData = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date date;
+        date = formateData.parse(data);
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return  sqlDate;
+    }
+    public Time converteHora (String hora) throws ParseException{
+        SimpleDateFormat formateData = new SimpleDateFormat("HH:mm:ss");
+        java.util.Date hr;
+        hr = formateData.parse(hora);
+        Time sqlTime= new java.sql.Time(hr.getTime());
+        return  sqlTime;
+    }
     /**
      * @param args the command line arguments
      */
@@ -258,31 +338,32 @@ public class Reservar extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Reservar().setVisible(true);
+                try {
+                    new Reservar().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Reservar.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
+    private javax.swing.JComboBox<String> ambiente;
+    private javax.swing.JTextField cpf;
+    private javax.swing.JTextField data;
+    private javax.swing.JTextField hora;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 
     

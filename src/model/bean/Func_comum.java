@@ -15,12 +15,12 @@ public class Func_comum extends Funcionario{
     int cod_func_com;
     String tipo;
 
-    public Func_comum(int cod_func_com, String tipo, int cod_func, int matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
+    public Func_comum(int cod_func_com, String tipo, int cod_func, String matricula, String cargo, String setor, int cpf, int telefone, String nome, Date data_nasc, int rg, String email) {
         super(cod_func, matricula, cargo, setor, cpf, telefone, nome, data_nasc, rg, email);
         this.cod_func_com = cod_func_com;
         this.tipo = tipo;
     }
-
+    public Func_comum(){}
     public int getCod_func_com() {
         return cod_func_com;
     }

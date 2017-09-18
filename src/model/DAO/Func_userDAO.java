@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.bean.Func_user;
 
 public class Func_userDAO {
     public boolean checkLogin(String login, String senha) {
@@ -44,6 +46,30 @@ public class Func_userDAO {
 
         return check;
 
+    }
+    public void create(Func_user f){
+        
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try{
+            stmt = c.prepareStatement("INSERT INTO func_user (login,senha,cod_func) VALUES (?,?,?)");
+            stmt.setString(1, f.getLogin());
+            stmt.setString(2,f.getSenha());
+            stmt.setInt(3, f.getCod_func());
+           
+            stmt.executeUpdate();
+            
+           
+            JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
+        }
+        catch(SQLException ex){
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE,null,ex);
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar!");
+        }
+        
+        finally{
+            Conexao.closeConnection(c, stmt);
+        }
     }
     
 }

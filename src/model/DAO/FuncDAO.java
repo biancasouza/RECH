@@ -22,15 +22,16 @@ import model.bean.Funcionario;
  * @author biank
  */
 public class FuncDAO {
-   public void create(Funcionario f){
+   public boolean create(Funcionario f){
         
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try{
-            stmt = c.prepareStatement("INSERT INTO funcionario (matricula, cargo, setor) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, f.getMatricula());
+            stmt = c.prepareStatement("INSERT INTO funcionario (matricula, cargo, setor,cpf) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, f.getMatricula());
             stmt.setString(2, f.getCargo());
             stmt.setString(3, f.getSetor());
+            stmt.setInt(4, f.getCpf());
             stmt.executeUpdate();
             
             ResultSet rs = stmt.getGeneratedKeys();
@@ -47,6 +48,6 @@ public class FuncDAO {
         finally{
             Conexao.closeConnection(c, stmt);
         }
-       
+       return true;
     } 
 }

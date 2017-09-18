@@ -6,7 +6,7 @@
 package model.bean;
 
 import java.sql.Time;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *
@@ -28,7 +28,7 @@ public class Reserva {
         this.cpf = cpf;
         this.numero = numero;
     }
-
+    public Reserva(){}
     public int getCod_reserva() {
         return cod_reserva;
     }

@@ -23,7 +23,7 @@ public class Comunidade extends Pessoa{
         this.endereco = endereco;
     }
   
-
+    public Comunidade(){}
     public int getCod_comunidade() {
         return cod_comunidade;
     }

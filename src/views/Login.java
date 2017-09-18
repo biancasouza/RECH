@@ -5,18 +5,20 @@
  */
 package views;
 
-import control.Sessao;
+
 import config.Conexao;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.DAO.Func_userDAO;
 import model.bean.Func_user;
+import model.bean.Pessoa;
 import model.bean.Usuario;
 
 /**
@@ -49,11 +51,11 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         login = new javax.swing.JTextField();
         senha = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        register = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         jLabel5.setText("RECH - Sistema de Reserva e Empréstimo de Chaves");
@@ -83,15 +85,20 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton1.setText("Entrar");
-        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        register.setBackground(new java.awt.Color(255, 255, 255));
+        register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        register.setText("Entrar");
+        register.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        register.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                registerActionPerformed(evt);
             }
         });
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/li.png"))); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        jLabel6.setText("RECH - Sistema de Reserva e Empréstimo de Chaves");
 
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -103,54 +110,45 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/li.png"))); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
-        jLabel6.setText("RECH - Sistema de Reserva e Empréstimo de Chaves");
-
         javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
         Rech.setLayout(RechLayout);
         RechLayout.setHorizontalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(RechLayout.createSequentialGroup()
-                .addGap(454, 454, 454)
+                .addGap(43, 43, 43)
+                .addComponent(jLabel4)
+                .addGap(65, 65, 65)
                 .addComponent(jLabel3)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(RechLayout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(RechLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4)
-                        .addGap(61, 61, 61)
-                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(RechLayout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(RechLayout.createSequentialGroup()
-                                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(27, 27, 27)
-                                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(login)
-                                    .addComponent(senha)))))
+                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(27, 27, 27)
+                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(login, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                            .addComponent(senha))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(RechLayout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(jLabel6)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addGap(150, 150, 150))
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+            .addGroup(RechLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addComponent(jLabel6)
-                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(RechLayout.createSequentialGroup()
-                        .addGap(68, 68, 68)
+                        .addGap(61, 61, 61)
                         .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -161,13 +159,14 @@ public class Login extends javax.swing.JFrame {
                             .addGroup(RechLayout.createSequentialGroup()
                                 .addGap(27, 27, 27)
                                 .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(35, 35, 35)
-                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)))
-                .addContainerGap(104, Short.MAX_VALUE))
+                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3))
+                    .addComponent(jLabel4))
+                .addGap(0, 104, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -192,7 +191,7 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_senhaActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
         Func_userDAO dao = new Func_userDAO();
         if (dao.checkLogin(login.getText(), senha.getText())) {  //Testa Login e senha
             Connection con = Conexao.getConnection();
@@ -200,9 +199,10 @@ public class Login extends javax.swing.JFrame {
             ResultSet rs = null;
             try {
                 //Consulta o restante dos dados do usuário que fez o login
-                stmt = con.prepareStatement("SELECT * FROM pessoa,funcionario,func_user WHERE pessoa.cpf = funcionario.cpf and login = ? and senha = ?  and func_user.cod_func_user = funcionario.cod_func");
+                stmt = con.prepareStatement("SELECT * FROM pessoa,funcionario,func_user WHERE pessoa.cpf = funcionario.cpf and login = ? and senha = ?  and func_user.cod_func = funcionario.cod_func");
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Erro!");
             }
             try {
                 stmt.setString(1, login.getText());
@@ -212,28 +212,27 @@ public class Login extends javax.swing.JFrame {
 
                 if (rs.next()) {
                     // Abre o menu correto dependendo do tipo de usuário
-                    int mat = rs.getInt("matricula");
-                    if (mat > 0) {
-                        new Menu().setVisible(true);
+                    String mat = rs.getString("matricula");
+                    
+                    //Cria um objeto funcionario com os dados retornados
+                    int cpf = rs.getInt("cpf");
+                    int telefone = rs.getInt("telefone");
+                    String nome = rs.getString("nome");
+                    Date data_nasc = rs.getDate("data_nasc");
+                    String email = rs.getString("email");
+                   int rg = rs.getInt("rg");
+                  
+                    Pessoa p = new Pessoa(cpf, telefone, nome,  data_nasc,  rg,  email);
+                    if (mat == null) {
+                        new Menu2(p).setVisible(true);
                         this.dispose();
 
                     } else {
-                        new Menu2().setVisible(true);
+                        new Menu(p).setVisible(true);
                         this.dispose();
 
                     }
-                    //Cria um objeto funcionario com os dados retornados
-                    int id = rs.getInt("cod_func_user");
-                    String nome = rs.getString("nome");
-                    String login = rs.getString("login");
-                    String senha = rs.getString("senha");
-                    Usuario u = new Usuario(id, nome, login, senha);
-                    Sessao sessao = Sessao.getInstance();
-                    sessao.setUsuario(u);
                     
-                    //Mostra quem está logado
-                    System.out.println(Sessao.getInstance().getUsuario());// Aqui da certo
-
                 }
 
             } catch (SQLException ex) {
@@ -246,11 +245,14 @@ public class Login extends javax.swing.JFrame {
             login.setText("");
             senha.setText("");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_registerActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new CadastroUser().setVisible(true);
-        this.dispose();
+        
+        String vinculo = "Usuario";
+        CadastroPessoa p = new CadastroPessoa(vinculo);
+        p.setVisible(true);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -293,7 +295,6 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -302,6 +303,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField login;
+    private javax.swing.JButton register;
     private javax.swing.JPasswordField senha;
     // End of variables declaration//GEN-END:variables
 }
