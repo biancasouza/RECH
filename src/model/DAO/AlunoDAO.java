@@ -51,9 +51,9 @@ public class AlunoDAO {
         try {
             stmt = c.prepareStatement("UPDATE aluno SET turno = ?, semestre = ?, curso = ?, cpf = ? WHERE matricula = ?");
 
-            stmt.setString(1, a.getCurso());
+            stmt.setString(1, a.getTurno());
             stmt.setInt(2, a.getSemestre());
-            stmt.setString(3, a.getTurno());
+            stmt.setString(3, a.getCurso());
             stmt.setInt(4, a.getCpf());
             stmt.setInt(5, a.getMatricula());
             stmt.executeUpdate();

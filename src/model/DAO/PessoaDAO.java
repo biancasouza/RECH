@@ -54,7 +54,7 @@ public class PessoaDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try {
-            stmt = c.prepareStatement("UPDATE pessoa SET nome = ?, rg = ?, data_nasc = ?, email = ?, telefone = ? WHERE cpf = ?");
+            stmt = c.prepareStatement("UPDATE pessoa SET nome = ?, rg = ?, data_nasc = ?, email = ? telefone = ? WHERE cpf = ?");
 
             stmt.setInt(6, p.getCpf());
             stmt.setInt(5, p.getTelefone());
