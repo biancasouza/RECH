@@ -25,7 +25,7 @@ public class Emp_armario {
         this.matricula = matricula;
         this.cod_armario = cod_armario;
     }
-
+    public Emp_armario(){}
     public int getCod_emprestimo() {
         return cod_emprestimo;
     }

@@ -27,7 +27,7 @@ public class Emp_ambiente {
         this.cod_func_com = cod_func_com;
         this.numero = numero;
     }
-
+    public Emp_ambiente(){}
     public int getCod_emp_amb() {
         return cod_emp_amb;
     }

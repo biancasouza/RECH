@@ -10,9 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.bean.Ambiente;
 import model.bean.Armario;
 /**
  *
@@ -45,6 +48,65 @@ public class ArmarioDAO {
         }
         
         finally{
+            Conexao.closeConnection(c, stmt);
+        }
+    }
+    public void update(Armario a) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("UPDATE armario SET  status = ? WHERE cod_armario = ?");
+
+            stmt.setInt(1, a.getStatus());
+            stmt.setInt(1, a.getCod_armario());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+
+    }
+
+    public List<Armario> read() {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Armario> armarios = new ArrayList<>();
+        try {
+            stmt = c.prepareStatement("SELECT * FROM armario WHERE cod_armario <> NULL");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                
+                Armario a = new Armario();
+
+                a.setStatus(rs.getInt("status"));
+               
+
+                armarios.add(a);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+        return armarios;
+    }
+
+    public void delete(Armario a) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("DELETE FROM armario where cod_armario = ?");
+            stmt.setInt(1, a.getCod_armario());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Registro excluido!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir registro!");
+        } finally {
             Conexao.closeConnection(c, stmt);
         }
     }

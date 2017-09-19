@@ -12,9 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.bean.Comunidade;
 import model.bean.Funcionario;
 
 /**
@@ -49,5 +52,65 @@ public class FuncDAO {
             Conexao.closeConnection(c, stmt);
         }
        return true;
-    } 
+    }
+   public void update(Funcionario f) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("UPDATE comunidade SET setor = ?, cargo = ? WHERE matricula = ?");
+
+            stmt.setString(1, f.getSetor());
+            stmt.setString(2, f.getMatricula());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+
+    }
+
+    public List<Funcionario> read() {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Funcionario> func = new ArrayList<>();
+        try {
+            stmt = c.prepareStatement("SELECT * FROM funcionario WHERE matricula <> NULL");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                
+                Funcionario f = new Funcionario();
+
+                f.setCargo(rs.getString("cargo"));
+                f.setSetor(rs.getString("setor"));
+                f.setMatricula(rs.getString("matricula"));
+                
+                func.add(f);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+        return func;
+    }
+
+    public void delete(Funcionario f) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("DELETE FROM funcionario where matricula = ?");
+            stmt.setString(1, f.getMatricula());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Registro excluido!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir registro!");
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+    }
 }
