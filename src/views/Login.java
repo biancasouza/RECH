@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import model.DAO.Func_userDAO;
 import model.bean.Func_user;
 import model.bean.Pessoa;
-import model.bean.Usuario;
+
 
 /**
  *
