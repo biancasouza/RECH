@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.bean.Aluno;
 import model.bean.Ambiente;
 
 /**
@@ -45,6 +46,70 @@ public class AmbienteDAO {
         }
         
         finally{
+            Conexao.closeConnection(c, stmt);
+        }
+    }
+    
+      public void update(Ambiente a) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("UPDATE ambiente SET bloco = ?, setor = ?, status = ? WHERE numero = ?");
+
+            stmt.setString(1, a.getBloco());
+            stmt.setString(2, a.getSetor());
+            stmt.setInt(3, a.getStatus());
+            stmt.setInt(4, a.getNumero());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+
+    }
+
+    public List<Ambiente> read() {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Ambiente> ambientes = new ArrayList<>();
+        try {
+            stmt = c.prepareStatement("SELECT * FROM ambiente WHERE numero <> NULL");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                
+                Ambiente a = new Ambiente();
+
+                a.setNumero(rs.getInt("numero"));
+                a.setSetor(rs.getString("setor"));
+                a.setBloco(rs.getString("bloco"));
+                a.setStatus(rs.getInt("status"));
+
+                ambientes.add(a);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+        return ambientes;
+    }
+
+    public void delete(Ambiente a) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("DELETE FROM ambiente where numero = ?");
+            stmt.setInt(1, a.getNumero());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Registro excluido!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir registro!");
+        } finally {
             Conexao.closeConnection(c, stmt);
         }
     }
