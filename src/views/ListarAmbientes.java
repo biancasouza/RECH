@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.DAO.ReservaDAO;
+import model.bean.Pessoa;
 import model.bean.Reserva;
 
 /**
@@ -33,41 +34,22 @@ public class ListarAmbientes extends javax.swing.JFrame {
         jTable1.setRowSorter(new TableRowSorter (modelo));
         readJTable();
     }
-    public void consulta() throws SQLException{
-        Connection con = Conexao.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            //Consulta o restante dos dados do usuário que fez o login
-            stmt = con.prepareStatement("SELECT * FROM pessoa,emp_ambiente,ambiente WHERE pessoa.cpf = reserva.cpf AND ambiente.numero = reserva.numero");
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Erro!");
-        }
-        rs = stmt.executeQuery();
-        if (rs.next()) {
-            nome = rs.getString("pessoa.nome");
-            status = rs.getInt("status");
-            descricao = rs.getString("setor");
-        
-        }
+  
     
-    }
     private void readJTable() throws ParseException{
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setNumRows(0);
         ReservaDAO dao = new ReservaDAO();
-        for(Reserva r : dao.read()){
+        for(Object o : dao.read()){
             modelo.addRow(new Object[]{
-                r.getCod_reserva(),
-                r.getData_evento(),
-                descricao,
-                status,
-                nome
+              
+                   
+                
+            
                 
             });
         }
-        System.out.println(descricao);
+        
         
     }
 

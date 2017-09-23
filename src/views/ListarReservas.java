@@ -47,45 +47,23 @@ public class ListarReservas extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTableReservas.getModel();
         modelo.setNumRows(0);
         ReservaDAO dao = new ReservaDAO();
-        consulta();
+  
         for(Reserva r : dao.read() ){
             modelo.addRow(new Object[]{
                 r.getCod_reserva(),
                 r.getData_evento(),
-                descricao,
-                sit,
-                nome
+               
+                
 
             });
        
         }
         
     }
-     public void consulta() throws SQLException{
-        Connection con = Conexao.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            //Consulta o restante dos dados do usuário que fez o login
-            stmt = con.prepareStatement("SELECT * FROM pessoa,reserva,ambiente WHERE pessoa.cpf = reserva.cpf AND ambiente.numero = reserva.numero");
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Erro!");
-        }
-        rs = stmt.executeQuery();
-        if (rs.next()) {
-            nome = rs.getString("nome");
-            status = rs.getInt("status");
-            descricao = rs.getString("setor");
-            if (status == 0){
-            sit = "Emprestado";
-            }
-            else if (status == 1){
-                sit = "Devolvido";
-            }    
-        }
-       
-    }
+    
+        
+    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

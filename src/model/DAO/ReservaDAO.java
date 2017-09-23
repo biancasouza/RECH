@@ -75,22 +75,27 @@ public class ReservaDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<Reserva> reservas = new ArrayList<>();
+        List<Reserva> retorno= new ArrayList<>();
       
         try {
-            stmt = c.prepareStatement("SELECT * FROM reserva");
+            stmt = c.prepareStatement("SELECT * FROM pessoa,reserva,ambiente WHERE pessoa.cpf = reserva.cpf AND ambiente.numero = reserva.numero");
             rs = stmt.executeQuery();
             while (rs.next()) {
                 
                 Reserva r = new Reserva();
-                
+                //Pessoa p = new Pessoa();
+                //Ambiente a = new Ambiente();
 
                 r.setCod_reserva(rs.getInt("cod_reserva"));
                 r.setData_evento(rs.getDate("data_evento"));
-                r.setNumero(rs.getInt("numero"));
+                //r.setNumero(rs.getInt("numero"));
+                //p.setNome(rs.getString("nome"));
+                //a.setSetor(rs.getString("setor"));
+                //a.setStatus(rs.getInt("status"));
                 
-                
-                reservas.add(r);
+                retorno.add(r);
+                //retorno.add(p);
+               //retorno.add(a);
               
             }
         } catch (SQLException ex) {
@@ -98,7 +103,7 @@ public class ReservaDAO {
         } finally {
             Conexao.closeConnection(c, stmt);
         }
-        return reservas;
+        return retorno;
     }
 
     public void delete(Comunidade com) {
