@@ -6,6 +6,7 @@
 package views;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.bean.Pessoa;
@@ -288,12 +289,24 @@ public class Menu2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        ListarAmbientes l = new  ListarAmbientes();
+        ListarAmbientes l = null;
+        try {
+            l = new  ListarAmbientes();
+        } catch (ParseException ex) {
+            Logger.getLogger(Menu2.class.getName()).log(Level.SEVERE, null, ex);
+        }
         l.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        ListarReservas l = new ListarReservas();
+        ListarReservas l = null;
+        try {
+            l = new ListarReservas();
+        } catch (ParseException ex) {
+            Logger.getLogger(Menu2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu2.class.getName()).log(Level.SEVERE, null, ex);
+        }
         l.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 

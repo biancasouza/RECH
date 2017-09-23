@@ -4,20 +4,88 @@
  * and open the template in the editor.
  */
 package views;
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Array;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import model.DAO.AmbienteDAO;
+import model.DAO.PessoaDAO;
+import model.DAO.ReservaDAO;
+import model.bean.Ambiente;
+import model.bean.Pessoa;
+import model.bean.Reserva;
 /**
  *
  * @author biank
  */
 public class ListarReservas extends javax.swing.JFrame {
-
+    
+    String nome;
+    int status;
+    String descricao;
+    String sit;
     /**
      * Creates new form ListarReservas
      */
-    public ListarReservas() {
+    public ListarReservas() throws ParseException, SQLException {
         initComponents();
+        DefaultTableModel modelo = (DefaultTableModel) jTableReservas.getModel();
+        jTableReservas.setRowSorter(new TableRowSorter (modelo));
+        readJTable();
+       
+        
     }
+    private void readJTable() throws ParseException, SQLException{
+        DefaultTableModel modelo = (DefaultTableModel) jTableReservas.getModel();
+        modelo.setNumRows(0);
+        ReservaDAO dao = new ReservaDAO();
+        consulta();
+        for(Reserva r : dao.read() ){
+            modelo.addRow(new Object[]{
+                r.getCod_reserva(),
+                r.getData_evento(),
+                descricao,
+                sit,
+                nome
 
+            });
+       
+        }
+        
+    }
+     public void consulta() throws SQLException{
+        Connection con = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            //Consulta o restante dos dados do usuário que fez o login
+            stmt = con.prepareStatement("SELECT * FROM pessoa,reserva,ambiente WHERE pessoa.cpf = reserva.cpf AND ambiente.numero = reserva.numero");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        rs = stmt.executeQuery();
+        if (rs.next()) {
+            nome = rs.getString("nome");
+            status = rs.getInt("status");
+            descricao = rs.getString("setor");
+            if (status == 0){
+            sit = "Emprestado";
+            }
+            else if (status == 1){
+                sit = "Devolvido";
+            }    
+        }
+       
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,7 +98,7 @@ public class ListarReservas extends javax.swing.JFrame {
         Rech = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableReservas = new javax.swing.JTable();
         jLabel25 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
 
@@ -45,36 +113,28 @@ public class ListarReservas extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(97, 180, 83));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "RESERVAS DE AMBIENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 14))); // NOI18N
 
-        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51)));
-        jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableReservas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51)));
+        jTableReservas.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jTableReservas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+
             },
             new String [] {
-                "CÓDIGO", "DESCRIÇÃO", "DATA RESERVADA", "PERÍODO", "STATUS", "RESPONSÁVEL"
+                "CÓDIGO",  "DATA RESERVADA", "DESCRIÇÃO","STATUS", "RESPONSÁVEL"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jTableReservas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableReservasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableReservas);
 
         jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sair_318-10026.png"))); // NOI18N
 
@@ -144,6 +204,10 @@ public class ListarReservas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTableReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReservasMouseClicked
+        
+    }//GEN-LAST:event_jTableReservasMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -174,7 +238,13 @@ public class ListarReservas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListarReservas().setVisible(true);
+                try {
+                    new ListarReservas().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ListarReservas.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ListarReservas.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -185,6 +255,8 @@ public class ListarReservas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableReservas;
     // End of variables declaration//GEN-END:variables
+
+    
 }

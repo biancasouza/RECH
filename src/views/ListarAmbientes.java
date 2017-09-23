@@ -4,7 +4,19 @@
  * and open the template in the editor.
  */
 package views;
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import model.DAO.ReservaDAO;
+import model.bean.Reserva;
 
 /**
  *
@@ -12,11 +24,51 @@ import java.awt.Toolkit;
  */
 public class ListarAmbientes extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ListarAmbientes
-     */
-    public ListarAmbientes() {
+    String nome;
+    int status;
+    String descricao;
+    public ListarAmbientes() throws ParseException {
         initComponents();
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        jTable1.setRowSorter(new TableRowSorter (modelo));
+        readJTable();
+    }
+    public void consulta() throws SQLException{
+        Connection con = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            //Consulta o restante dos dados do usuário que fez o login
+            stmt = con.prepareStatement("SELECT * FROM pessoa,emp_ambiente,ambiente WHERE pessoa.cpf = reserva.cpf AND ambiente.numero = reserva.numero");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        rs = stmt.executeQuery();
+        if (rs.next()) {
+            nome = rs.getString("pessoa.nome");
+            status = rs.getInt("status");
+            descricao = rs.getString("setor");
+        
+        }
+    
+    }
+    private void readJTable() throws ParseException{
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setNumRows(0);
+        ReservaDAO dao = new ReservaDAO();
+        for(Reserva r : dao.read()){
+            modelo.addRow(new Object[]{
+                r.getCod_reserva(),
+                r.getData_evento(),
+                descricao,
+                status,
+                nome
+                
+            });
+        }
+        System.out.println(descricao);
+        
     }
 
     /**
@@ -50,34 +102,21 @@ public class ListarAmbientes extends javax.swing.JFrame {
         jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+
             },
             new String [] {
-                "CÓDIGO", "DESCRIÇÃO", "DATA EMPRÉSTIMO", "DATA DEVOLUÇÃO", "STATUS", "RESPONSÁVEL"
+                "CÓDIGO",  "DATA EMPRÉSTIMO", "DESCRIÇÃO", "STATUS", "RESPONSÁVEL"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -176,7 +215,11 @@ public class ListarAmbientes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListarAmbientes().setVisible(true);
+                try {
+                    new ListarAmbientes().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ListarAmbientes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

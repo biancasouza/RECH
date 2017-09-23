@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.bean.Ambiente;
 import model.bean.Comunidade;
+import model.bean.Pessoa;
 import model.bean.Reserva;
 
 /**
@@ -69,28 +71,34 @@ public class ReservaDAO {
 
     }
 
-    public List<Comunidade> read() {
+    public List<Reserva> read() {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<Comunidade> comunidades = new ArrayList<>();
+        List<Reserva> reservas = new ArrayList<>();
+      
         try {
-            stmt = c.prepareStatement("SELECT * FROM comunidade WHERE numero <> NULL");
+            stmt = c.prepareStatement("SELECT * FROM reserva");
             rs = stmt.executeQuery();
             while (rs.next()) {
                 
-                Comunidade com = new Comunidade();
-
-                com.setEndereco(rs.getString("endereco"));
+                Reserva r = new Reserva();
                 
-                comunidades.add(com);
+
+                r.setCod_reserva(rs.getInt("cod_reserva"));
+                r.setData_evento(rs.getDate("data_evento"));
+                r.setNumero(rs.getInt("numero"));
+                
+                
+                reservas.add(r);
+              
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.closeConnection(c, stmt);
         }
-        return comunidades;
+        return reservas;
     }
 
     public void delete(Comunidade com) {
