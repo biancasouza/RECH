@@ -9,6 +9,9 @@ import com.sun.java.swing.plaf.windows.resources.windows;
 
 import static java.awt.SystemColor.window;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.bean.Pessoa;
 
 /**
@@ -238,7 +241,12 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
-        EmprestarArmario e= new EmprestarArmario();
+        EmprestarArmario e = null;
+        try {
+            e = new EmprestarArmario();
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         e.setVisible(true);
     }//GEN-LAST:event_jMenu5MouseClicked
 
