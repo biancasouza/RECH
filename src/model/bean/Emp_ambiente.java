@@ -16,11 +16,11 @@ import java.util.Date;
 public class Emp_ambiente {
     int cod_emp_amb;
     Date data;
-    int matricula;
-    int cod_func_com;
+    Integer matricula;
+    Integer cod_func_com;
     int numero;
 
-    public Emp_ambiente(int cod_emp_amb, Date data, int matricula, int cod_func_com, int numero) {
+    public Emp_ambiente(int cod_emp_amb, Date data, Integer matricula, Integer cod_func_com, Integer numero) {
         this.cod_emp_amb = cod_emp_amb;
         this.data = data;
         this.matricula = matricula;
@@ -44,19 +44,19 @@ public class Emp_ambiente {
         this.data = data;
     }
 
-    public int getMatricula() {
+    public Integer getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(int matricula) {
+    public void setMatricula(Integer matricula) {
         this.matricula = matricula;
     }
 
-    public int getCod_func_com() {
+    public Integer getCod_func_com() {
         return cod_func_com;
     }
 
-    public void setCod_func_com(int cod_func_com) {
+    public void setCod_func_com(Integer cod_func_com) {
         this.cod_func_com = cod_func_com;
     }
 

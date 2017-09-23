@@ -83,7 +83,7 @@ public class Reservar extends javax.swing.JFrame {
     jLabel16.setText("Data:");
 
     jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jLabel19.setText("CPF (Para os demais):");
+    jLabel19.setText("CPF:");
 
     jLabel20.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jLabel20.setText("Hora: ");

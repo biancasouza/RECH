@@ -72,7 +72,7 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "CÓDIGO", "DESCRIÇÃO", "DATA EMPRÉSTIMO", "DATA DEVOLUÇÃO", "STATUS", "RESPONSÁVEL"
+                "CÓDIGO","CHAVE", "DESCRIÇÃO", "DATA EMPRÉSTIMO", "STATUS", "RESPONSÁVEL"
             }
         ));
         jScrollPane1.setViewportView(jTable1);

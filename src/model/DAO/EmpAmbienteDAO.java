@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,17 +33,26 @@ public class EmpAmbienteDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try{
-            stmt = c.prepareStatement("INSERT INTO funcionario (data, matricula, cod_func_com, numero) VALUES (?,?,?,?)");
+            stmt = c.prepareStatement("INSERT INTO emp_ambiente (data, matricula, cod_func_com, numero) VALUES (?,?,?,?)");
             stmt.setDate(1, (Date) e.getData());
-            stmt.setInt(2, e.getMatricula());
-            stmt.setInt(3, e.getCod_func_com());
+            if (e.getMatricula() == null){
+            stmt.setNull(2, Types.INTEGER);}
+            else{
+            stmt.setInt(2, e.getMatricula());}
+           
+             if (e.getCod_func_com() == null){
+            stmt.setNull(3, Types.INTEGER);}
+            else{
+            stmt.setInt(3, e.getCod_func_com());}
             stmt.setInt(4, e.getNumero());
             stmt.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Empréstimo feito com sucesso!");
             
         }
         catch(SQLException ex){
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE,null,ex);
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar pessoa!");
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar ambiente!");
         }
         
         finally{
