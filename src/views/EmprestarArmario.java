@@ -85,7 +85,7 @@ public class EmprestarArmario extends javax.swing.JFrame {
         Rech.setName("RECH"); // NOI18N
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
-        jLabel11.setText("REALIZAR EMPRÉSTIMO");
+        jLabel11.setText("ALTERAR EMPRÉSTIMO");
 
         jPanel3.setBackground(new java.awt.Color(97, 180, 83));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 14))); // NOI18N
@@ -154,7 +154,7 @@ public class EmprestarArmario extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addGap(18, 18, 18)
                 .addComponent(matricula, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,27 +186,23 @@ public class EmprestarArmario extends javax.swing.JFrame {
         Rech.setLayout(RechLayout);
         RechLayout.setHorizontalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addGap(42, 42, 42))
             .addGroup(RechLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 3, Short.MAX_VALUE)
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel17)))
+                        .addComponent(jLabel17))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(42, 42, 42))
-            .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RechLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,16 +212,13 @@ public class EmprestarArmario extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel17)
                     .addComponent(jLabel18))
-                .addGap(118, 118, 118)
+                .addGap(34, 34, 34)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10)
                 .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RechLayout.createSequentialGroup()
-                    .addGap(72, 72, 72)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(231, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -247,17 +240,17 @@ public class EmprestarArmario extends javax.swing.JFrame {
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
         Emp_armario e = new Emp_armario();
         EmpArmarioDAO dao = new EmpArmarioDAO();
-        
+
         Connection con = Conexao.getConnection();
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
-     
+
         try {
-           
+
             stmt = con.prepareStatement("SELECT * FROM aluno WHERE matricula = ?");
-         
+
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Matrícula não encontrada!");
@@ -265,20 +258,19 @@ public class EmprestarArmario extends javax.swing.JFrame {
         try {
             stmt.setString(1, matricula.getText());
             rs = stmt.executeQuery();
-        
+
             if (rs.next()) {
                 int m = rs.getInt("matricula");
                 e.setMatricula(m);
             }
-         } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
 
-            }
+        }
         try {
-           
+
             stmt2 = con.prepareStatement("SELECT * FROM armario WHERE num_chave = ? AND num_armario = ?");
-         
+
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Matrícula não encontrada!");
@@ -287,17 +279,16 @@ public class EmprestarArmario extends javax.swing.JFrame {
             stmt2.setInt(1, Integer.parseInt((String) chave.getSelectedItem()));
             stmt2.setInt(2, Integer.parseInt((String) armario.getSelectedItem()));
             rs2 = stmt2.executeQuery();
-        
+
             if (rs2.next()) {
                 int cod = rs2.getInt("cod_armario");
                 e.setCod_armario(cod);
-                
-                
+
             }
-         } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
         try {
             e.setDevolucao(converteData(devolucao.getText()));
         } catch (ParseException ex) {
@@ -308,7 +299,7 @@ public class EmprestarArmario extends javax.swing.JFrame {
         chave.setSelectedItem("Selecione");
         armario.setSelectedItem("Selecione");
         devolucao.setText("");
-        
+
     }//GEN-LAST:event_jLabel10MouseClicked
     public Date converteData (String data) throws ParseException{
         SimpleDateFormat formateData = new SimpleDateFormat("dd/MM/yyyy");
