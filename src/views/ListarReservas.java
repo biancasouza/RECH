@@ -210,6 +210,7 @@ public class ListarReservas extends javax.swing.JFrame {
 
     private void jLabel24MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel24MouseClicked
         if(jTableReservas.getSelectedRow()!= -1){
+            String valor = null;
         Connection con = Conexao.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -222,7 +223,7 @@ public class ListarReservas extends javax.swing.JFrame {
         }
 
         try {
-            String valor = (String) jTableReservas.getValueAt(jTableReservas.getSelectedRow(), 2);
+            valor = (String) jTableReservas.getValueAt(jTableReservas.getSelectedRow(), 2);
             stmt.setString(1,valor);
         } catch (SQLException ex) {
             Logger.getLogger(ListarReservas.class.getName()).log(Level.SEVERE, null, ex);
@@ -235,10 +236,13 @@ public class ListarReservas extends javax.swing.JFrame {
             try {
                 if (rs.next()){
                     int cpf = rs.getInt("pessoa.cpf");
-                    EditarReserva er = new EditarReserva(cpf);
+                    EditarReserva er = new EditarReserva(cpf,valor);
                     er.setVisible(true);
+                    this.dispose();
                     
                 }   } catch (SQLException ex) {
+                Logger.getLogger(ListarReservas.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
                 Logger.getLogger(ListarReservas.class.getName()).log(Level.SEVERE, null, ex);
             }
 

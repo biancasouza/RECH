@@ -45,21 +45,24 @@ public class ReservaDAO {
         }
         catch(SQLException ex){
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE,null,ex);
-            JOptionPane.showMessageDialog(null, "Erro!");
+            JOptionPane.showMessageDialog(null, "Ambiente não disponível para esta data");
         }
         
         finally{
             Conexao.closeConnection(c, stmt);
         }
     }
-       public void update(Comunidade com) {
+       public void update(Reserva r) {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try {
-            stmt = c.prepareStatement("UPDATE comunidade SET endereco = ? WHERE cod_comunidade = ?");
+            stmt = c.prepareStatement("UPDATE reserva SET data_evento = ?, hora_evento = ?, numero = ?, cpf = ? WHERE cod_reserva = ?");
 
-            stmt.setString(1, com.getEndereco());
-            stmt.setInt(2, com.getCod_comunidade());
+            stmt.setDate(1, (Date) r.getData_evento());
+            stmt.setTime(2, r.getHora());
+            stmt.setInt(3, r.getNumero());
+            stmt.setInt(4, r.getCpf());
+            stmt.setInt(5, r.getCod_reserva());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {
