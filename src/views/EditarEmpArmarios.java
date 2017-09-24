@@ -4,20 +4,84 @@
  * and open the template in the editor.
  */
 package views;
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.DAO.EmpArmarioDAO;
+import model.DAO.ReservaDAO;
+import model.bean.Emp_armario;
+import model.bean.Reserva;
 /**
  *
  * @author biank
  */
 public class EditarEmpArmarios extends javax.swing.JFrame {
-
+    int matr;
     /**
      * Creates new form EditarEmpArmarios
      */
-    public EditarEmpArmarios() {
+    public EditarEmpArmarios(int matr) throws SQLException, ParseException {
         initComponents();
+        this.matr = matr;
+        preencher(matr);
+        listararmario();
+        listarchave();
     }
-
+     public final void listarchave() throws SQLException {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        stmt = c.prepareStatement("SELECT num_chave FROM armario");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            chave.addItem(rs.getString(1));
+            
+        }
+        chave.updateUI();
+    }
+     public final void listararmario() throws SQLException {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        stmt = c.prepareStatement("SELECT num_armario FROM armario");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            armario.addItem(rs.getString(1));
+            
+        }
+        armario.updateUI();
+    }
+   public final void preencher(int matri) throws SQLException, ParseException {
+        matricula.setText(String.valueOf(matri));
+        Connection con = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = con.prepareStatement("SELECT * FROM pessoa,armario, emp_armario, aluno WHERE pessoa.cpf = aluno.cpf and aluno.matricula = emp_armario.matricula and armario.cod_armario = emp_armario.cod_armario and aluno.matricula = ?");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        stmt.setInt(1, Integer.parseInt(matricula.getText()));
+        rs = stmt.executeQuery();
+        if (rs.next()) {
+            int armarioN = rs.getInt("num_armario");
+            int chaveN  = rs.getInt("num_chave");
+            
+            armarioT.setText(String.valueOf(armarioN));
+            chaveT.setText(String.valueOf(chaveN));
+          
+            
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,14 +98,18 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         armario = new javax.swing.JComboBox<>();
         chave = new javax.swing.JComboBox<>();
-        jLabel19 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         matricula = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        armarioT = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        chaveT = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("RECH - Alterar Empréstimos de Armários");
@@ -67,27 +135,19 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
 
         chave.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione"}));
 
-        jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel19.setText("Devolvido: ");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel19))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(armario, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(chave, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCheckBox1))
+                .addComponent(jLabel14)
+                .addGap(34, 34, 34)
+                .addComponent(armario, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chave, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -99,11 +159,7 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
                     .addComponent(jLabel16)
                     .addComponent(armario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(jCheckBox1))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(97, 180, 83));
@@ -112,16 +168,37 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel15.setText("Matrícula: ");
 
+        matricula.setEditable(false);
+        matricula.setEnabled(false);
+
+        jLabel20.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel20.setText("Chave:");
+
+        armarioT.setEditable(false);
+        armarioT.setEnabled(false);
+
+        jLabel21.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel21.setText("Armário:");
+
+        chaveT.setEditable(false);
+        chaveT.setEnabled(false);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel15)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel20))
                 .addGap(18, 18, 18)
-                .addComponent(matricula, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(armarioT, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(matricula, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chaveT, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,7 +207,15 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(matricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(armarioT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chaveT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37))
         );
 
         jLabel17.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
@@ -149,6 +234,24 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
             }
         });
 
+        jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel19.setText("RENOVAR");
+        jLabel19.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel19MouseClicked(evt);
+            }
+        });
+
+        jLabel22.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel22.setText("DEVOLVER");
+        jLabel22.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel22.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel22MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
         Rech.setLayout(RechLayout);
         RechLayout.setHorizontalGroup(
@@ -158,7 +261,7 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                        .addGap(0, 3, Short.MAX_VALUE)
+                        .addGap(0, 23, Short.MAX_VALUE)
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel11)
@@ -166,14 +269,17 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
                         .addComponent(jLabel17)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
+                .addComponent(jLabel19)
+                .addGap(51, 51, 51)
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel10)
                 .addGap(42, 42, 42))
-            .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RechLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
+            .addGroup(RechLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,16 +289,17 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel17)
                     .addComponent(jLabel18))
-                .addGap(118, 118, 118)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel10)
+                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel19)
+                        .addComponent(jLabel22)))
                 .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RechLayout.createSequentialGroup()
-                    .addGap(72, 72, 72)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(231, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -214,50 +321,185 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
-       
+        int cod_a =0;
+        int cod_e = 0;
+        Date devolucao = null;
+     
+        try {                                      
+            Connection con = Conexao.getConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            PreparedStatement stmt2 = null;
+            ResultSet rs2 = null;
+           
+            try {
+                stmt = con.prepareStatement("SELECT cod_emprestimo,devolucao FROM pessoa, aluno, armario, emp_armario WHERE armario.cod_armario = emp_armario.cod_armario AND pessoa.cpf = aluno.cpf AND aluno.matricula = emp_armario.matricula AND  aluno.matricula = ? ");
+                stmt2 = con.prepareStatement("SELECT cod_armario FROM  armario WHERE num_chave = ? AND num_armario = ?");
+          
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Erro!");
+            }
+            stmt.setInt(1, Integer.parseInt(matricula.getText()));
+            stmt2.setInt(1, Integer.parseInt((String) chave.getSelectedItem()));
+            stmt2.setInt(2, Integer.parseInt((String) armario.getSelectedItem()));
+            
+            rs = stmt.executeQuery();
+            rs2 = stmt2.executeQuery();
+            
+            if (rs.next()) {
+             
+                cod_e = rs.getInt("cod_emprestimo");  
+                devolucao = rs.getDate("devolucao");
+            }
+            if (rs2.next()) {
+                cod_a = rs2.getInt("cod_armario");
+                      
+            }
+            
+            Emp_armario e = new Emp_armario();
+            EmpArmarioDAO dao  = new EmpArmarioDAO();
+            
+            e.setCod_armario(cod_a);
+            e.setCod_emprestimo(cod_e);
+            e.setMatricula(matr);
+         
+            e.setDevolucao(devolucao);
+           
+            dao.update(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarReserva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.dispose();
+        ListarArmarios l = null;
+        l.setVisible(true);
 
     }//GEN-LAST:event_jLabel10MouseClicked
 
+    private void jLabel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseClicked
+            int cod_a = 0;
+            
+            String dev = JOptionPane.showInputDialog(null, "Digite a devolução:");
+            try {
+                Connection con = Conexao.getConnection();
+                PreparedStatement stmt2 = null;
+                ResultSet rs2 = null;
+                stmt2 = con.prepareStatement("SELECT cod_emprestimo,devolucao FROM pessoa, aluno, armario, emp_armario WHERE armario.cod_armario = emp_armario.cod_armario AND pessoa.cpf = aluno.cpf AND aluno.matricula = emp_armario.matricula AND  aluno.matricula = ? ");
+                 stmt2.setInt(1, Integer.parseInt(matricula.getText()));
+             
+                rs2 = stmt2.executeQuery();
+                if (rs2.next()) {
+                cod_a = rs2.getInt("cod_emprestimo");
+                      
+                }
+                Emp_armario e = new Emp_armario();
+                EmpArmarioDAO dao  = new EmpArmarioDAO();
+                
+                e.setCod_emprestimo(cod_a);
+                e.setDevolucao(converteData(dev));
+                 
+                 dao.renovar(e);
+            } catch (SQLException ex) {
+                Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        this.dispose();
+        ListarArmarios l = null;
+        try {
+            l = new ListarArmarios();
+        } catch (ParseException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        l.setVisible(true);
+    }//GEN-LAST:event_jLabel19MouseClicked
+
+    private void jLabel22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel22MouseClicked
+        int cod_a = 0;
+        int cod_e= 0;   
+            try {
+                Connection con = Conexao.getConnection();
+                PreparedStatement stmt2 = null;
+                ResultSet rs2 = null;
+                stmt2 = con.prepareStatement("SELECT cod_emprestimo,armario.cod_armario FROM pessoa, aluno, armario, emp_armario WHERE armario.cod_armario = emp_armario.cod_armario AND pessoa.cpf = aluno.cpf AND aluno.matricula = emp_armario.matricula AND  aluno.matricula = ? ");
+                 stmt2.setInt(1, Integer.parseInt(matricula.getText()));
+             
+                rs2 = stmt2.executeQuery();
+                if (rs2.next()) {
+                cod_e = rs2.getInt("cod_emprestimo");
+                cod_a = rs2.getInt("cod_armario");      
+                }
+                Emp_armario e = new Emp_armario();
+                EmpArmarioDAO dao  = new EmpArmarioDAO();
+                
+                e.setCod_emprestimo(cod_e);
+                e.setCod_armario(cod_a);
+                 
+                 dao.delete(e);
+            } catch (SQLException ex) {
+                Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        this.dispose();
+        ListarArmarios l = null;
+        try {
+            l = new ListarArmarios();
+        } catch (ParseException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        l.setVisible(true);
+    }//GEN-LAST:event_jLabel22MouseClicked
+public Date converteData(String data) throws ParseException {
+        SimpleDateFormat formateData = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date date;
+        date = formateData.parse(data);
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return sqlDate;
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditarEmpArmarios().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpArmarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new EditarEmpArmarios().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
     private javax.swing.JComboBox<String> armario;
+    private javax.swing.JTextField armarioT;
     private javax.swing.JComboBox<String> chave;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JTextField chaveT;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
@@ -266,6 +508,9 @@ public class EditarEmpArmarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField matricula;

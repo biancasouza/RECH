@@ -265,8 +265,8 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2MouseClicked
 
     private void jMenuItem3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem3MouseClicked
-        EditarEmpArmarios e = new EditarEmpArmarios();
-        e.setVisible(true);
+//        EditarEmpArmarios e = new EditarEmpArmarios();
+//        e.setVisible(true);
     }//GEN-LAST:event_jMenuItem3MouseClicked
 
     private void jMenuItem5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem5MouseClicked
@@ -292,8 +292,8 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1MenuKeyPressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        EditarEmpArmarios e = new EditarEmpArmarios();
-        e.setVisible(true);
+//        EditarEmpArmarios e = new EditarEmpArmarios();
+//        e.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed

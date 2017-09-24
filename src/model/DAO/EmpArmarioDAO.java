@@ -57,12 +57,31 @@ public class EmpArmarioDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try {
-            stmt = c.prepareStatement("UPDATE emp_armario SET entrega = ?, devolucao = ?, matricula = ? WHERE cod_emprestimo = ?");
+            stmt = c.prepareStatement("UPDATE emp_armario SET entrega = ?, devolucao = ?, matricula = ?, cod_armario = ? WHERE cod_emprestimo = ?");
 
             stmt.setDate(1, (Date) emparmario.getEntrega());
             stmt.setDate(2, (Date) emparmario.getDevolucao());
             stmt.setInt(3, emparmario.getMatricula());
-            stmt.setInt(4, emparmario.getCod_emprestimo());
+            stmt.setInt(4, emparmario.getCod_armario());
+             stmt.setInt(5, emparmario.getCod_emprestimo());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
+        } finally {
+            Conexao.closeConnection(c, stmt);
+        }
+    }
+    public void renovar(Emp_armario emparmario) {
+        Connection c = Conexao.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement("UPDATE emp_armario SET  devolucao = ? WHERE cod_emprestimo = ?");
+
+          
+            stmt.setDate(1, (Date) emparmario.getDevolucao());
+             stmt.setInt(2, emparmario.getCod_emprestimo());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {
@@ -101,11 +120,15 @@ public class EmpArmarioDAO {
 
     public void delete(Emp_armario emp_armario) {
         Connection c = Conexao.getConnection();
+         PreparedStatement stmt2 = null;
         PreparedStatement stmt = null;
         try {
+            stmt2 = c.prepareStatement("UPDATE armario SET status = 0 where cod_armario = ?");
             stmt = c.prepareStatement("DELETE FROM emp_armario where cod_emprestimo = ?");
+            stmt2.setInt(1, emp_armario.getCod_armario());
             stmt.setInt(1, emp_armario.getCod_emprestimo());
             stmt.executeUpdate();
+            stmt2.executeUpdate();
             JOptionPane.showMessageDialog(null, "Registro excluido!");
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
