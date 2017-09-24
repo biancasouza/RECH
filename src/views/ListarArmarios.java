@@ -5,6 +5,16 @@
  */
 package views;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import model.DAO.ListarEmpArmarioDAO;
+import model.DAO.ListarReservasDAO;
 /**
  *
  * @author biank
@@ -14,10 +24,51 @@ public class ListarArmarios extends javax.swing.JFrame {
     /**
      * Creates new form ListarArmarios
      */
-    public ListarArmarios() {
+    public ListarArmarios() throws ParseException, SQLException {
         initComponents();
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        jTable1.setRowSorter(new TableRowSorter (modelo));
+        readJTable();
     }
-
+    private void readJTable() throws ParseException, SQLException{
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setNumRows(0);
+        ListarEmpArmarioDAO dao = new ListarEmpArmarioDAO();
+  
+        for(model.bean.ListarEmpArmario l : dao.read() ){
+            modelo.addRow(new Object[]{
+                l.getPessoa().getNome(),
+                l.getAluno().getMatricula(),
+                l.getArmario().getNum_armario(),
+                l.getArmario().getNum_chave(),
+                converteData2(l.getEmp_armario().getEntrega()),
+                converteData2(l.getEmp_armario().getDevolucao()),
+                retornaSit(l.getArmario().getStatus())
+            });
+        }  
+    }
+     public String converteData2(Date data) throws ParseException {
+        String dtString = new SimpleDateFormat("dd/MM/yyyy").format(data);
+        return dtString;
+    }
+    public String retornaSit(int status){
+         String s = null;
+        switch (status) {
+            case 0:
+                s = "Disponível";
+                break;
+            case 1:
+                s = "Emprestado";
+                break;
+            case 2:
+                s = "Atrasado";
+                break;
+            default:
+                break;
+        }
+         return s;
+     
+     }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,31 +100,14 @@ public class ListarArmarios extends javax.swing.JFrame {
         jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ALUNO", "ARMÁRIO", "CHAVE", "DATA EMPRÉSTIMO", "DATA DEVOLUÇÃO","STATUS"
+                "ALUNO", "MATRICULA","ARMÁRIO", "CHAVE", "DATA EMPRÉSTIMO", "DATA DEVOLUÇÃO","STATUS"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -174,7 +208,13 @@ public class ListarArmarios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListarArmarios().setVisible(true);
+                try {
+                    new ListarArmarios().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ListarArmarios.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ListarArmarios.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

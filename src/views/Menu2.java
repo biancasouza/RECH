@@ -193,7 +193,6 @@ public class Menu2 extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu4.setText("Relatórios");
         jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu4MouseClicked(evt);
@@ -260,6 +259,8 @@ public class Menu2 extends javax.swing.JFrame {
             l = new  ListarAmbientes();
         } catch (ParseException ex) {
             Logger.getLogger(Menu2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu2.class.getName()).log(Level.SEVERE, null, ex);
         }
         l.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -281,8 +282,8 @@ public class Menu2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu4ActionPerformed
 
     private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
-        RelatoriosRecepcao r = new RelatoriosRecepcao();
-        r.setVisible(true);
+//        RelatoriosRecepcao r = new RelatoriosRecepcao();
+//        r.setVisible(true);
     }//GEN-LAST:event_jMenu4MouseClicked
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed

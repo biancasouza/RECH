@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package views;
+
 
 import config.Conexao;
 import java.awt.Toolkit;
@@ -217,7 +217,7 @@ public class RelatoriosCAE extends javax.swing.JFrame {
                     
                     stmt = con.prepareStatement("SELECT * FROM armario, emp_armario,pessoa, aluno WHERE pessoa.cpf = aluno.cpf AND aluno.matricula = emp_armario.matricula AND armario.cod_armario = emp_armario.cod_armario AND status = ? AND emp_armario.entrega between '?' and '?'");
                 } catch (SQLException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("Erro!");
                 }
                 

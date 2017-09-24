@@ -10,6 +10,7 @@ import com.sun.java.swing.plaf.windows.resources.windows;
 import static java.awt.SystemColor.window;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.bean.Pessoa;
@@ -207,7 +208,6 @@ public class Menu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu6.setText("Relatórios");
         jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu6MouseClicked(evt);
@@ -270,13 +270,20 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3MouseClicked
 
     private void jMenuItem5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem5MouseClicked
-        ListarArmarios l = new ListarArmarios();
+        ListarArmarios l = null;
+        try {
+            l = new ListarArmarios();
+        } catch (ParseException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         l.setVisible(true);
     }//GEN-LAST:event_jMenuItem5MouseClicked
 
     private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
-        RelatoriosCAE r = new RelatoriosCAE();
-        r.setVisible(true);
+//        RelatoriosCAE r = new RelatoriosCAE();
+//        r.setVisible(true);
     }//GEN-LAST:event_jMenu6MouseClicked
 
     private void jMenuItem1MenuKeyPressed(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_jMenuItem1MenuKeyPressed
@@ -290,7 +297,14 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        ListarArmarios l = new ListarArmarios();
+        ListarArmarios l = null;
+        try {
+            l = new ListarArmarios();
+        } catch (ParseException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         l.setVisible(true);
       
     }//GEN-LAST:event_jMenuItem5ActionPerformed

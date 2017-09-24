@@ -16,7 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.DAO.ArmarioDAO;
 import model.DAO.EmpArmarioDAO;
+import model.bean.Armario;
 import model.bean.Emp_ambiente;
 import model.bean.Emp_armario;
 
@@ -240,12 +243,15 @@ public class EmprestarArmario extends javax.swing.JFrame {
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
         Emp_armario e = new Emp_armario();
         EmpArmarioDAO dao = new EmpArmarioDAO();
-
+        Armario a = new Armario();
+        ArmarioDAO  adao = new ArmarioDAO();
         Connection con = Conexao.getConnection();
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+         PreparedStatement stmt3 = null;
+        ResultSet rs3 = null;
 
         try {
 
@@ -294,7 +300,31 @@ public class EmprestarArmario extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(EmprestarArmario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+           
+            stmt3 = con.prepareStatement("SELECT * FROM armario WHERE num_chave = ? AND num_armario = ?");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        try {
+        
+            stmt3.setInt(1, (int) armario.getSelectedItem());
+            stmt3.setInt(2, (int) chave.getSelectedItem());
+            rs3= stmt3.executeQuery();
+          
+            if (rs3.next()) {
+                a.setNum_armario(rs3.getInt("num_armario"));
+                a.setNum_chave(rs3.getInt("num_chave"));
+                a.setCod_armario(rs3.getInt("cod_armario"));
+                a.setStatus(1);
+            }
+         } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex);
+            }
         dao.create(e);
+        adao.update(a);
         matricula.setText("");
         chave.setSelectedItem("Selecione");
         armario.setSelectedItem("Selecione");

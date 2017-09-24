@@ -11,11 +11,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import model.DAO.ListarEmpAmbienteDAO;
+import model.DAO.ListarReservasDAO;
 import model.DAO.ReservaDAO;
+import model.bean.ListarEmp_Amb;
 import model.bean.Pessoa;
 import model.bean.Reserva;
 
@@ -28,31 +33,46 @@ public class ListarAmbientes extends javax.swing.JFrame {
     String nome;
     int status;
     String descricao;
-    public ListarAmbientes() throws ParseException {
+    public ListarAmbientes() throws ParseException, SQLException {
         initComponents();
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter (modelo));
         readJTable();
     }
   
-    
-    private void readJTable() throws ParseException{
+      private void readJTable() throws ParseException, SQLException{
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setNumRows(0);
-        ReservaDAO dao = new ReservaDAO();
-        for(Object o : dao.read()){
+          ListarEmpAmbienteDAO dao = new ListarEmpAmbienteDAO();
+ 
+        for(model.bean.ListarEmp_Amb l : dao.read() ){
             modelo.addRow(new Object[]{
-              
-                   
-                
-            
-                
+                l.getEmp_ambiente().getCod_emp_amb(),
+                l.getEmp_ambiente().getData(),
+                l.getAmbiente().getSetor()
             });
-        }
-        
-        
+        } 
     }
-
+    public String converteData2(Date data) throws ParseException {
+        String dtString = new SimpleDateFormat("dd/MM/yyyy").format(data);
+        return dtString;
+    }
+    public String retornaSit(int status){
+         String s = null;
+        switch (status) {
+            case 0:
+                s = "Disponível";
+                break;
+            case 1:
+                s = "Reservado";
+                break;
+          
+            default:
+                break;
+        }
+         return s;
+     
+     }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -200,6 +220,8 @@ public class ListarAmbientes extends javax.swing.JFrame {
                 try {
                     new ListarAmbientes().setVisible(true);
                 } catch (ParseException ex) {
+                    Logger.getLogger(ListarAmbientes.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
                     Logger.getLogger(ListarAmbientes.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
