@@ -32,8 +32,11 @@ public class EmpAmbienteDAO {
         
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
+       
         try{
+            
             stmt = c.prepareStatement("INSERT INTO emp_ambiente (data, matricula, cod_func_com, numero) VALUES (?,?,?,?)");
+         
             stmt.setDate(1, (Date) e.getData());
             if (e.getMatricula() == null){
             stmt.setNull(2, Types.INTEGER);}
@@ -45,8 +48,9 @@ public class EmpAmbienteDAO {
             else{
             stmt.setInt(3, e.getCod_func_com());}
             stmt.setInt(4, e.getNumero());
+          
             stmt.executeUpdate();
-            
+           
             JOptionPane.showMessageDialog(null, "Empréstimo feito com sucesso!");
             
         }

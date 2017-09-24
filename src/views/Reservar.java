@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.DAO.AmbienteDAO;
 import model.DAO.ReservaDAO;
 import model.bean.Ambiente;
 import model.bean.Reserva;
@@ -226,6 +227,8 @@ public class Reservar extends javax.swing.JFrame {
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
         Reserva r = new Reserva();
         ReservaDAO dao = new ReservaDAO();
+        Ambiente a = new Ambiente();
+        AmbienteDAO adao = new AmbienteDAO();
         
         try {
             r.setData_evento(converteData(data.getText()));
@@ -241,8 +244,10 @@ public class Reservar extends javax.swing.JFrame {
         Connection con = Conexao.getConnection();
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+        ResultSet rs3 = null;
         try {
            
             stmt = con.prepareStatement("SELECT * FROM pessoa WHERE pessoa.cpf = ? ");
@@ -284,8 +289,31 @@ public class Reservar extends javax.swing.JFrame {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, ex);
             }
+         try {
+           
+            stmt3 = con.prepareStatement("SELECT * FROM ambiente WHERE setor = ? ");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro!");
+        }
+        try {
+        
+            stmt3.setString(1, (String) ambiente.getSelectedItem());
+            rs3= stmt3.executeQuery();
+          
+            if (rs3.next()) {
+                a.setBloco(rs3.getString("bloco"));
+                a.setNumero(rs3.getInt("numero"));
+                a.setSetor(rs3.getString("setor"));
+                a.setStatus(1);
+            }
+         } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex);
+            }
            
         dao.create(r);
+        adao.update(a);
         data.setText("");
         hora.setText("");
         cpf.setText("");

@@ -235,7 +235,7 @@ public class EmprestarAmbiente extends javax.swing.JFrame {
         try {
            
             stmt = con.prepareStatement("SELECT cod_func_com FROM pessoa, func_comum,funcionario WHERE pessoa.cpf = ? AND pessoa.cpf = funcionario.cpf AND funcionario.cod_func = func_comum.cod_func");
-         
+            
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("CPF não encontrado!");

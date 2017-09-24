@@ -4,7 +4,19 @@
  * and open the template in the editor.
  */
 package views;
+
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author biank
@@ -32,16 +44,15 @@ public class RelatoriosCAE extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        dt_inicio = new javax.swing.JFormattedTextField();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        dt_fim = new javax.swing.JFormattedTextField();
+        opcoes = new javax.swing.JComboBox<>();
+        data = new javax.swing.JCheckBox();
+        status = new javax.swing.JCheckBox();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -67,15 +78,15 @@ public class RelatoriosCAE extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel19.setText("até:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Devolvido","Em atraso","Não Devolvido"}));
+        opcoes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Devolvido","Em atraso","Não Devolvido"}));
 
-        jCheckBox1.setBackground(new java.awt.Color(97, 180, 83));
-        jCheckBox1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jCheckBox1.setText("Data:");
+        data.setBackground(new java.awt.Color(97, 180, 83));
+        data.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        data.setText("Data:");
 
-        jCheckBox2.setBackground(new java.awt.Color(97, 180, 83));
-        jCheckBox2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jCheckBox2.setText("Status:");
+        status.setBackground(new java.awt.Color(97, 180, 83));
+        status.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        status.setText("Status:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -88,19 +99,19 @@ public class RelatoriosCAE extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(data)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel18)
                                 .addGap(2, 2, 2)
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dt_inicio, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jCheckBox2)
+                                .addComponent(status)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(opcoes, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(dt_fim, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -110,15 +121,15 @@ public class RelatoriosCAE extends javax.swing.JFrame {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dt_inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18)
                     .addComponent(jLabel19)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox1))
+                    .addComponent(dt_fim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(data))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox2))
+                    .addComponent(opcoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(status))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -130,9 +141,13 @@ public class RelatoriosCAE extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(255, 51, 51));
         jLabel13.setText("---------------------------------------");
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sair_318-10026.png"))); // NOI18N
-
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/sair.png"))); // NOI18N
+        jLabel10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel10MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
         Rech.setLayout(RechLayout);
@@ -157,9 +172,7 @@ public class RelatoriosCAE extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addGap(44, 44, 44))
+                .addGap(48, 48, 48))
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,9 +185,7 @@ public class RelatoriosCAE extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(71, 71, 71))
@@ -196,6 +207,107 @@ public class RelatoriosCAE extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        if (data.isEnabled() && status.isEnabled()) {
+            try {
+                Connection con = Conexao.getConnection();
+                PreparedStatement stmt = null;
+                ResultSet rs = null;
+                try {
+                    
+                    stmt = con.prepareStatement("SELECT * FROM armario, emp_armario,pessoa, aluno WHERE pessoa.cpf = aluno.cpf AND aluno.matricula = emp_armario.matricula AND armario.cod_armario = emp_armario.cod_armario AND status = ? AND emp_armario.entrega between '?' and '?'");
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("Erro!");
+                }
+                
+                try {
+                    stmt.setInt(1, retornaStatus(opcoes.getSelectedItem().toString()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    stmt.setDate(2, (java.sql.Date) converteData(dt_inicio.getText()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    stmt.setDate(3, (java.sql.Date) converteData(dt_fim.getText()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    rs = stmt.executeQuery();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                if (rs.next()){
+                  
+                        String nome = rs.getString("nome");
+                        int mat = rs.getInt("matricula");
+                        String curso = rs.getString("curso");
+                        int semestre = rs.getInt("semestre");
+                        String email = rs.getString("email");
+                        int tel = rs.getInt("telefone");
+                        
+                        int chave = rs.getInt("num_chave");
+                        int armario = rs.getInt("num_armario");
+                        Date entrega = rs.getDate("entrega");
+                        Date devolucao = rs.getDate("devolucao");
+                        String situacao = retornaSit(rs.getInt("status"));
+                    
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(RelatoriosCAE.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }//GEN-LAST:event_jLabel10MouseClicked
+     public Date converteData(String data) throws ParseException {
+        SimpleDateFormat formateData = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date date;
+        date = formateData.parse(data);
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return sqlDate;
+    }
+     public int retornaStatus (String status){
+         int ns = 0;
+         if (status.equals("Emprestado")){
+             ns = 1;
+         }
+         else if (status.equals("Disponível")){
+             ns = 0;
+         }
+         else if (status.equals("Atrasado")){
+             ns = 2;
+         }
+         return ns;
+     
+     }
+     public String retornaSit(int status){
+         String s = null;
+        switch (status) {
+            case 0:
+                s = "Disponível";
+                break;
+            case 1:
+                s = "Emprestado";
+                break;
+            case 2:
+                s = "Atrasado";
+                break;
+            default:
+                break;
+        }
+         return s;
+     
+     }
     /**
      * @param args the command line arguments
      */
@@ -233,11 +345,9 @@ public class RelatoriosCAE extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
+    private javax.swing.JCheckBox data;
+    private javax.swing.JFormattedTextField dt_fim;
+    private javax.swing.JFormattedTextField dt_inicio;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -246,7 +356,8 @@ public class RelatoriosCAE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JComboBox<String> opcoes;
+    private javax.swing.JCheckBox status;
     // End of variables declaration//GEN-END:variables
 }
