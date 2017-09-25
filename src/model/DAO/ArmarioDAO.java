@@ -63,7 +63,7 @@ public class ArmarioDAO {
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
+           // JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!");
         } finally {
             Conexao.closeConnection(c, stmt);
         }

@@ -309,14 +309,15 @@ public class EmprestarArmario extends javax.swing.JFrame {
         }
         try {
         
-            stmt3.setInt(1, (int) armario.getSelectedItem());
-            stmt3.setInt(2, (int) chave.getSelectedItem());
+            stmt3.setInt(1, Integer.parseInt(armario.getSelectedItem().toString()));
+            stmt3.setInt(2, Integer.parseInt(chave.getSelectedItem().toString()));
             rs3= stmt3.executeQuery();
           
             if (rs3.next()) {
                 a.setNum_armario(rs3.getInt("num_armario"));
                 a.setNum_chave(rs3.getInt("num_chave"));
                 a.setCod_armario(rs3.getInt("cod_armario"));
+                
                 a.setStatus(1);
             }
          } catch (SQLException ex) {
@@ -324,7 +325,7 @@ public class EmprestarArmario extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, ex);
             }
         dao.create(e);
-        adao.update(a);
+       // adao.update(a);
         matricula.setText("");
         chave.setSelectedItem("Selecione");
         armario.setSelectedItem("Selecione");

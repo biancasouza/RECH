@@ -56,13 +56,13 @@ public class ReservaDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try {
-            stmt = c.prepareStatement("UPDATE reserva SET data_evento = ?, hora_evento = ?, numero = ?, cpf = ? WHERE cod_reserva = ?");
+            stmt = c.prepareStatement("UPDATE reserva SET data_evento = ?, hora_evento = ?, numero = ? WHERE cod_reserva = ?");
 
             stmt.setDate(1, (Date) r.getData_evento());
             stmt.setTime(2, r.getHora());
             stmt.setInt(3, r.getNumero());
-            stmt.setInt(4, r.getCpf());
-            stmt.setInt(5, r.getCod_reserva());
+           
+            stmt.setInt(4, r.getCod_reserva());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {

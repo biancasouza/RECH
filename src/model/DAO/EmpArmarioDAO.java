@@ -31,14 +31,14 @@ public class EmpArmarioDAO {
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try{
-            stmt = c.prepareStatement("INSERT INTO emp_armario (cod_emprestimo, entrega, devolucao, matricula, cod_armario) VALUES (?,?,?,?,?)");
-            stmt = c.prepareStatement("UPDATE armario SET status = ?");
+            stmt = c.prepareStatement("INSERT INTO emp_armario (cod_emprestimo,devolucao, matricula, cod_armario) VALUES (?,?,?,?)");
+            stmt2 = c.prepareStatement("UPDATE armario SET status = ?");
            
             stmt.setInt(1, emparmario.getCod_emprestimo());
-            stmt.setDate(2, (Date) emparmario.getEntrega());
-            stmt.setDate(3, (Date) emparmario.getDevolucao());
-            stmt.setInt(4, emparmario.getMatricula());
-            stmt.setInt(5, emparmario.getCod_armario());
+           
+            stmt.setDate(2, (Date) emparmario.getDevolucao());
+            stmt.setInt(3, emparmario.getMatricula());
+            stmt.setInt(4, emparmario.getCod_armario());
             stmt2.setInt(1, 1);
             stmt.executeUpdate();
             stmt2.executeUpdate();

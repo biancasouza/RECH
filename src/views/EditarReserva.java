@@ -325,6 +325,7 @@ public class EditarReserva extends javax.swing.JFrame {
                 Logger.getLogger(EditarReserva.class.getName()).log(Level.SEVERE, null, ex);
             }
             r.setNumero(num);
+            System.out.println(num);
             r.setCod_reserva(cod);
            
             dao.update(r);
