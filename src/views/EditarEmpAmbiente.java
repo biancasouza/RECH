@@ -4,19 +4,50 @@
  * and open the template in the editor.
  */
 package views;
+import config.Conexao;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.DAO.EmpAmbienteDAO;
+import model.DAO.EmpArmarioDAO;
+import model.bean.Emp_ambiente;
+import model.bean.Emp_armario;
 /**
  *
  * @author biank
  */
 public class EditarEmpAmbiente extends javax.swing.JFrame {
-
+    Date data_view;
+    String setor_view;
+    String nome_view;
     /**
      * Creates new form EditarEmpAmbiente
      */
-    public EditarEmpAmbiente() {
+    public EditarEmpAmbiente(Date data_view, String setor_view,String nome_view) throws ParseException {
         initComponents();
+        this.data_view= data_view;
+        this.setor_view = setor_view;
+        this.nome_view = nome_view;
+        preencha();
     }
+    public void preencha() throws ParseException{
+    
+    resp_nome.setText(nome_view);
+    data.setText(converteData2(data_view));
+    ambiente.setText(setor_view);
+    }
+   public String converteData2(Date data) throws ParseException {
+        String dtString = new SimpleDateFormat("dd/MM/yyyy").format(data);
+        return dtString;
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,11 +66,12 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        cpf = new javax.swing.JTextField();
+        resp_nome = new javax.swing.JTextField();
         data = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("RECH - Alterar Empréstimo de Ambientes");
@@ -67,7 +99,7 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addGap(95, 95, 95)
                 .addComponent(ambiente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,6 +120,12 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel19.setText("Responsável:");
 
+        resp_nome.setEditable(false);
+        resp_nome.setEnabled(false);
+
+        data.setEditable(false);
+        data.setEnabled(false);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -100,7 +138,7 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
                 .addGap(79, 79, 79)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(resp_nome, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -109,7 +147,7 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
-                    .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(resp_nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -133,6 +171,15 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
             }
         });
 
+        jLabel15.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel15.setText("Devolver");
+        jLabel15.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel15MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout RechLayout = new javax.swing.GroupLayout(Rech);
         Rech.setLayout(RechLayout);
         RechLayout.setHorizontalGroup(
@@ -140,25 +187,34 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
             .addGroup(RechLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(RechLayout.createSequentialGroup()
+                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12)
+                                .addGap(0, 10, Short.MAX_VALUE)))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
-                        .addGap(0, 10, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(36, 36, 36))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(36, 36, 36))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addGap(41, 41, 41))))))
         );
         RechLayout.setVerticalGroup(
             RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RechLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(RechLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
@@ -184,64 +240,167 @@ public class EditarEmpAmbiente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(Rech, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 5, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
-       
+       int numero = 0;
+        int cod_e= 0;   
+            try {
+                Connection con = Conexao.getConnection();
+                PreparedStatement stmt2 = null;
+                ResultSet rs2 = null;
+                stmt2 = con.prepareStatement("SELECT DISTINCT cod_emp_amb FROM ambiente, emp_ambiente,pessoa,aluno,funcionario,func_comum WHERE (pessoa.cpf = aluno.cpf AND aluno.matricula = emp_ambiente.matricula AND pessoa.nome = ? AND ambiente.setor = ?) OR (pessoa.cpf = funcionario.cpf AND funcionario.cod_func = func_comum.cod_func AND func_comum.cod_func_com =emp_ambiente.cod_func_com and pessoa.nome = ? AND ambiente.setor = ?)");
+                PreparedStatement stmt3 = null;
+                ResultSet rs3 = null;
+                 stmt3 = con.prepareStatement("SELECT DISTINCT ambiente.numero FROM ambiente WHERE setor = ?");
+                
+                
+                stmt2.setString(1, nome_view);
+                stmt2.setString(2, setor_view);
+                stmt2.setString(3, nome_view);
+                stmt2.setString(4, setor_view);
+                stmt3.setString(1, ambiente.getText());
+             
+                rs2 = stmt2.executeQuery();
+                rs3 = stmt3.executeQuery();
+                if (rs2.next()) {
+                cod_e = rs2.getInt("cod_emp_amb");
+                  
+                }
+                if (rs3.next()) {
+             
+                numero = rs3.getInt("numero");      
+                }
+                Emp_ambiente e = new Emp_ambiente();
+                EmpAmbienteDAO dao  = new EmpAmbienteDAO();
+                
+                e.setCod_emp_amb(cod_e);
+                System.out.println(numero);
+                e.setNumero(numero);
+                 
+                 dao.update(e);
+                 
+            } catch (SQLException ex) {
+                Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        this.dispose();
+        ListarAmbientes l = null;
+        try {
+            l = new ListarAmbientes();
+        } catch (ParseException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        l.setVisible(true);
     }//GEN-LAST:event_jLabel10MouseClicked
+
+    private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
+          int numero = 0;
+        int cod_e= 0;   
+            try {
+                Connection con = Conexao.getConnection();
+                PreparedStatement stmt2 = null;
+                ResultSet rs2 = null;
+                stmt2 = con.prepareStatement("SELECT DISTINCT cod_emp_amb FROM ambiente, emp_ambiente,pessoa,aluno,funcionario,func_comum WHERE (pessoa.cpf = aluno.cpf AND aluno.matricula = emp_ambiente.matricula AND pessoa.nome = ? AND ambiente.setor = ?) OR (pessoa.cpf = funcionario.cpf AND funcionario.cod_func = func_comum.cod_func AND func_comum.cod_func_com =emp_ambiente.cod_func_com and pessoa.nome = ? AND ambiente.setor = ?)");
+                PreparedStatement stmt3 = null;
+                ResultSet rs3 = null;
+                 stmt3 = con.prepareStatement("SELECT DISTINCT ambiente.numero FROM ambiente WHERE setor = ?");
+                
+                
+                stmt2.setString(1, nome_view);
+                stmt2.setString(2, setor_view);
+                stmt2.setString(3, nome_view);
+                stmt2.setString(4, setor_view);
+                stmt3.setString(1, ambiente.getText());
+             
+                rs2 = stmt2.executeQuery();
+                rs3 = stmt3.executeQuery();
+                if (rs2.next()) {
+                cod_e = rs2.getInt("cod_emp_amb");
+                  
+                }
+                if (rs3.next()) {
+             
+                numero = rs3.getInt("numero");      
+                }
+                Emp_ambiente e = new Emp_ambiente();
+                EmpAmbienteDAO dao  = new EmpAmbienteDAO();
+                
+                e.setCod_emp_amb(cod_e);
+                System.out.println(numero);
+                e.setNumero(numero);
+                 
+                 dao.delete(e);
+                 
+            } catch (SQLException ex) {
+                Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        this.dispose();
+        ListarAmbientes l = null;
+        try {
+            l = new ListarAmbientes();
+        } catch (ParseException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarEmpArmarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        l.setVisible(true);
+    }//GEN-LAST:event_jLabel15MouseClicked
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditarEmpAmbiente().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(EditarEmpAmbiente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new EditarEmpAmbiente().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Rech;
     private javax.swing.JTextField ambiente;
-    private javax.swing.JTextField cpf;
     private javax.swing.JTextField data;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField resp_nome;
     // End of variables declaration//GEN-END:variables
 }

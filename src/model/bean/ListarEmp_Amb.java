@@ -14,14 +14,24 @@ public class ListarEmp_Amb {
     public Aluno aluno;
     public Func_comum f;
     public Ambiente ambiente;
+    public Pessoa pessoa;
 
-    public ListarEmp_Amb(Emp_ambiente emp_ambiente, Aluno aluno, Ambiente ambiente, Func_comum f) {
+    public ListarEmp_Amb(Emp_ambiente emp_ambiente, Aluno aluno, Ambiente ambiente, Func_comum f, Pessoa pessoa) {
         this.emp_ambiente = emp_ambiente;
         this.aluno = aluno;
         this.ambiente = ambiente;
         this.f = f;
+        this.pessoa = pessoa;
     }
 
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+    
     public Aluno getAluno() {
         return aluno;
     }

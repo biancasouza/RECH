@@ -32,10 +32,12 @@ public class EmpAmbienteDAO {
         
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
        
         try{
             
             stmt = c.prepareStatement("INSERT INTO emp_ambiente (data, matricula, cod_func_com, numero) VALUES (?,?,?,?)");
+            stmt2 = c.prepareStatement(" UPDATE ambiente SET status = 1 WHERE numero = ?");
          
             stmt.setDate(1, (Date) e.getData());
             if (e.getMatricula() == null){
@@ -48,9 +50,9 @@ public class EmpAmbienteDAO {
             else{
             stmt.setInt(3, e.getCod_func_com());}
             stmt.setInt(4, e.getNumero());
-          
+            stmt2.setInt(1, e.getNumero());
             stmt.executeUpdate();
-           
+            stmt2.executeUpdate();
             JOptionPane.showMessageDialog(null, "Empréstimo feito com sucesso!");
             
         }
@@ -68,13 +70,11 @@ public class EmpAmbienteDAO {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
         try {
-            stmt = c.prepareStatement("UPDATE comunidade SET data = ?, matricula= ?, cod_func_com = ?, numero = ? WHERE cod_emp_amb = ?");
+            stmt = c.prepareStatement("UPDATE emp_ambiente SET  numero = ? WHERE cod_emp_amb = ?");
 
-            stmt.setDate(1, (Date) e.getData());
-            stmt.setInt(2, e.getMatricula());
-            stmt.setInt(3, e.getCod_func_com());
-            stmt.setInt(4, e.getNumero());
-            stmt.setInt(5, e.getCod_emp_amb());
+           
+            stmt.setInt(1, e.getNumero());
+            stmt.setInt(2, e.getCod_emp_amb());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {
@@ -116,10 +116,15 @@ public class EmpAmbienteDAO {
     public void delete(Emp_ambiente e) {
         Connection c = Conexao.getConnection();
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
         try {
             stmt = c.prepareStatement("DELETE FROM emp_ambiente where cod_emp_amb = ?");
-            stmt.setInt(1, e.getCod_func_com());
+            stmt2 = c.prepareStatement(" UPDATE ambiente SET status =0  WHERE numero = ?");
+         
+            stmt.setInt(1, e.getCod_emp_amb());
+            stmt2.setInt(1, e.getNumero());
             stmt.executeUpdate();
+            stmt2.executeUpdate();
             JOptionPane.showMessageDialog(null, "Registro excluido!");
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
